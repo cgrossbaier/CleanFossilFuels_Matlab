@@ -4,7 +4,7 @@ clear all
 
 % Constants
 
-global R deltah deltahpyr Tact B1 Bv epsilon boltzmann;
+global R deltah deltahpyr Tact Bv epsilon boltzmann YO2inf YO2;
 
 R = 8.3144621; % Gas constants
 
@@ -20,6 +20,8 @@ epsilon = 0.8; % emissivity of coal particle
 
 boltzmann = 1.3806488e-23; % boltzmann constant [m2*kg /s^2 / K]
 
+YO2inf = 0.21 * 0.032 / (0.21 * 0.032 + 0.79 * 0.028); % Concentration of O2
+
 % Define Coal Particle
 
 % Bituminous
@@ -32,7 +34,7 @@ w=[wAsh,wVolatile,wCarbon]';
 
 % Parameters
 
-global d dens m mShare Vstar v1 b1 Tair Twall;
+global d dens m mShare Vstar v1 B1 Tair Twall Sh D;
 
 d = 1e-4; % Diameter [m]
 
@@ -48,6 +50,8 @@ V=0; % V initial [kg]
 
 T=300; % T initial [K]
 
+YO2 = 1; % O2 Concentration
+
 v1= 31.99/12.01; % stochiometry
 
 B1 = 450; % B1 [m/s]
@@ -55,5 +59,12 @@ B1 = 450; % B1 [m/s]
 Tair = 1000; % T air or infinity [K]
 
 Twall = 300; % T wall or surrounding [K]
+
+Sh = 2; % Sherwood number, 
+% equal to 2 when velocity of particlae is similar 
+% to Velocity of air
+
+D = 1.57e-4; % [m^2/s] Mass diffusity of CO2 in N2
+
 
 

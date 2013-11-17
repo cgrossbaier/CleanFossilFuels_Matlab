@@ -12,7 +12,7 @@ mflow = 7.0476e-10;
 
 % Energy released
 
-dT_dt_res = (cpp(T)*m) ^(-1) * mflow * deltah;
+dT_dt_res = mflow * deltah;
 
 % Energy for devolatilisation
 
@@ -26,6 +26,10 @@ dT_dt_res = dT_dt_res - h * pi * d^2 * (T-Tair);
 % Energy from radiation
 
 dT_dt_res = dT_dt_res - epsilon * boltzmann * pi * d^2 * (T^4 - Twall^4);
+
+% Times 1/(cpp * m)
+
+dT_dt_res= dT_dt_res * (cpp(T)*m) ^(-1)
 
 % Energy loss
 
