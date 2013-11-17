@@ -6,17 +6,15 @@ function [ dT_dt_res ] = dT_dt( m, d, T, V)
 
 global R deltah deltahpyr Tair epsilon boltzmann Twall Vstar
 
-% DUMMY
-
-mflow = 7.0476e-10;
+mflow_value = mflow ( d, T);
 
 % Energy released
 
-dT_dt_res = mflow * deltah;
+dT_dt_res = mflow_value * deltah;
 
 % Energy for devolatilisation
 
-dT_dt_res = dT_dt_res - dV_dt(T, V)*deltahpyr;
+% dT_dt_res = dT_dt_res - dV_dt(T, V)*deltahpyr;
 
 % Energy from Convection
 
@@ -29,11 +27,11 @@ dT_dt_res = dT_dt_res - epsilon * boltzmann * pi * d^2 * (T^4 - Twall^4);
 
 % Times 1/(cpp * m)
 
-dT_dt_res= dT_dt_res * (cpp(T)*m) ^(-1)
+dT_dt_res= dT_dt_res * (cpp(T)*m) ^(-1);
 
 % Energy loss
 
-dT_dt_res = dT_dt_res - T / m * dm_dt(T,V);
+dT_dt_res = dT_dt_res - T / m * dm_dt(T,V, d);
 
 end
 

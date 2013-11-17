@@ -1,35 +1,37 @@
-function [ mflow_res ] = mflow ( v, d, T)
+function [ mflow_res ] = mflow ( d, T)
 %UNTITLED5 Summary of this function goes here
 %   Detailed explanation goes here
 
-global R v1 B1 Tact dens D YO2inf Sh YO2;
+global R v1  Tact densAir D YO2inf YO2;
 
-function [ result ] = mflowZero ( v, d, T, YO2)
+Pabs = 101325; 
 
-densAir = 101325 * 0.03 ./ (R * T);
+MWair = 0.03; % [kg/mol]
 
-result = v1 * pi * d^2 * densAir * YO2 * B1 * exp(-Tact/T)...
-    -1 / v1 * Sh * pi * d * dens * D * (YO2inf - YO2);
+k = 1.9086e+03 * exp(-Tact/T); % rate coefficient
 
-end
+densAir = Pabs * MWair / (R * T);
 
+D = (T/393).^1.5 * 1.6e-5; % Mass diffusivity for CO2 in N2, corrected to T;
 
-% 
-% function [ mflow_res ] = mflowSlow ( v, d, T, YO2)
-% 
-% mflow_res = 1 / v1 * Sh * pi * d * dens * D * (YO2inf - YO2);
-% 
+rDiff = v1/(densAir*D*2*pi*d);
+
+rKin = v1 * R * T * (pi * d^2 * MWair * k* Pabs) .^-1;
+
+mflow_res = YO2inf ./ (rDiff + rKin);
+
+YO2 = mflow_res * rKin;
+
+delta = (v1 + YO2) ./ v1;
+
+% i=0;
+% while abs(delta-1)>0.01
+%     
+%     delta
+%     rDiff = delta * rDiff;
+%     
 % end
 
-densAir = 101325 * 0.03 ./ (R * T);
-
-%syms YO2
-
-fsolve(@mflowZero(v, d, T, YO2), YO2);
-
-%mflow_res=v1 * pi * d^2 * densAir * YO2 * B1 * exp(-Tact./T);
-
-return
 
 end
 
