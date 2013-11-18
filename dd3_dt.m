@@ -4,7 +4,9 @@ function DD3 = dd3_dt(d,T )
 
 global dens
 
-DD3 = - 6 * mflow ( d, T) / (pi*dens);
+DD3 = - 6 * mflow ( d, T) / (pi*dens); 
+   
+
 
 return
 

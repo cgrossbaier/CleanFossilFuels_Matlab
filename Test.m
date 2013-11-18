@@ -17,11 +17,19 @@ Main
 
 %[T,Y]= ode45(@FunctionContainer, [0,2], [t, m, d, T, V],options)
 
-options = odeset('RelTol',1e-4,'AbsTol',[1e-4 1e-4 1e-5]);
+%options = odeset('RelTol',1e-4,'AbsTol',[1e-4 1e-4 1e-5]);
 
-timeMax=0.081;
+
+
+timeMax=0.07;
 
 [time,output] = ode45(@FunctionContainer,[0 timeMax],[m, d, T, V, 0,0]);
+
+options = odeset('Events',@(t,y)events(t,y));
+
+%[time,output,te,ye,ie]=ode45(@FunctionContainer,[0 timeMax],[m, d, T, V, mflowInitial,0], options);
+
+
 
 close all
 
@@ -51,10 +59,6 @@ for i=1:size(C)
     hold off
 
 end
-
-
-
-
 
 
 

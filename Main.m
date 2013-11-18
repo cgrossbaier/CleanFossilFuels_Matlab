@@ -34,7 +34,7 @@ w=[wAsh,wVolatile,wCarbon]';
 
 % Parameters
 
-global d dens m mShare Vstar v1 B1 Tair Twall Sh D densAir;
+global mflowInitial mash d dens m mShare Vstar v1 B1 Tair Twall Sh D densAir dash;
 
 d = 1e-4; % Diameter [m]
 
@@ -45,6 +45,10 @@ m = dens * (pi*d^3/6); % Initial mass [kg]
 mShare = m*w;% mshare [kg]
 
 Vstar = mShare(2,1); % Vstar 
+
+mash = mShare(1,1);
+
+dash = ((6*mash)/ (dens * pi))^(1/3);
 
 V=0; % V initial [kg]
 
@@ -69,4 +73,10 @@ D = 1.57e-4; % [m^2/s] Mass diffusity of CO2 in N2
 densAir = 101325 * 0.03 ./ (R * T);
 
 
+Pabs = 101325; 
+densAir = 101325 * 0.03 ./ (R * T);
+MWair = 0.03; % [kg/mol]
+D = (T/393).^1.5 * 1.6e-5; % Mass diffusivity for CO2 in N2, corrected to T;
+
+mflowInitial= v1 * pi * d^2 * densAir * YO2inf * B1 * exp(-7980/T);
 
