@@ -31,7 +31,7 @@ dT_dt_res= dT_dt_res * (cpp(T)*m) ^(-1);
 
 % Energy loss
 
-dT_dt_res = dT_dt_res - T / m * dm_dt(T,V, d);
+dT_dt_res = dT_dt_res - T / m * dm_dt(T,V,d);
 
 end
 

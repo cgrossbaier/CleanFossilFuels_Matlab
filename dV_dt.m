@@ -24,9 +24,9 @@ function [ dV_dT_res ] = dV_dt( T, V)
 
 % Global variables
 
-global Bv Tact Vstar
+global Bv TactVol Vstar
 
-kv = Bv * exp(-Tact/T);
+kv = Bv * exp(-TactVol/T);
 
 dV_dT_res = kv * (Vstar-V);
 

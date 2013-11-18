@@ -4,7 +4,7 @@ clear all
 
 % Constants
 
-global R deltah deltahpyr Tact Bv epsilon boltzmann YO2inf YO2;
+global R deltah deltahpyr TactVol Bv epsilon boltzmann YO2inf YO2;
 
 R = 8.3144621; % Gas constants
 
@@ -12,7 +12,7 @@ deltah = 32e6; % Heat value [j/kg]
 
 deltahpyr = 42e4; % Heat needed for combustion [j/kg]
 
-Tact=8860; % Tact [K]
+TactVol=8860; % Tact [K]
 
 Bv= 37e4; % Bv
 
@@ -34,7 +34,7 @@ w=[wAsh,wVolatile,wCarbon]';
 
 % Parameters
 
-global d dens m mShare Vstar v1 B1 Tair Twall Sh D;
+global d dens m mShare Vstar v1 B1 Tair Twall Sh D densAir;
 
 d = 1e-4; % Diameter [m]
 
@@ -65,6 +65,8 @@ Sh = 2; % Sherwood number,
 % to Velocity of air
 
 D = 1.57e-4; % [m^2/s] Mass diffusity of CO2 in N2
+
+densAir = 101325 * 0.03 ./ (R * T);
 
 
 
