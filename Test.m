@@ -21,15 +21,19 @@ Main
 
 
 
-timeMax=0.25;
+timeMax=0.35;
 
 %[time,output] = ode45(@FunctionContainer,[0 timeMax],[m, d, T, V, 0,0]);
 
-options = odeset('Events',@(t,y)events(t,y));
+options = odeset('Events',@eventsCFF);
+             
+%options = odeset('Events',@(time,output)eventsCFF(time,output));
 
-[time,output,te,ye,ie]=ode45(@FunctionContainer,[0 timeMax],[m, d, T, V, mflowInitial,0], options);
-
-
+[time,output,te,ye,ie]=ode45(...
+@FunctionContainer,...
+[0 timeMax],...
+[m, d, T, V, mflowInitial,0], ...
+options);
 
 close all
 
@@ -49,14 +53,11 @@ C{6,1}='Energy';
 figure(1);
 
 for i=1:size(C)
-   %figure(i)
-   
+    
    subplot(2,3,i);
    
    plot(time*1000, output(:,i))
-   
-   %hold on
-   
+      
     xlabel('Time [ms]','FontSize',15 );
     ylabel(C{i,1},'FontSize',15 );
     
@@ -106,9 +107,6 @@ for i=1:size(C)
        line([0,timeMax*1000],[Vstar, Vstar]);
        
    end
-    
-
-    %hold off
 
 end
 

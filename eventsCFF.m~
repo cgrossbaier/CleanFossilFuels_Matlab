@@ -1,4 +1,4 @@
-function [value,isterminal,direction] = events(t,y)
+function [value,isterminal,direction] = eventsCFF(time,output)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -8,21 +8,35 @@ function [value,isterminal,direction] = events(t,y)
 
 global dash mash Vstar
 
+%value=zeros(2,1);
+%isterminal=zeros(2,1);
+%direction=zeros(2,1);
 
 % V = Vstar
-value = y(5)-Vstar;     % detect diamater difference = 0
-isterminal = 0;   % stop the integration
+
+dummy=1.6216e-09;
+Vzero=1;
+% 
+if (Vstar-output())/Vstar <= 0.01
+     Vzero=0;
+end
+
+output(4)
+
+value = 0;     % detect Volatile difference = 0
+isterminal = 1;   % stop the integration
 direction = 0;   % either direction
+
 
 % % Diameter = dash
 % value(2) = y(2)-dash;     % detect diamater difference = 0
 % isterminal(2) = 1;   % stop the integration
 % direction(2) = 0;   % either direction
 
-% Mass = mash
-value = y(1)-mash;     % detect diamater difference = 0
-isterminal = 1;   % stop the integration
-direction = 0;   % either direction
+% % Mass = mash
+% value(2) = y(1)-mash;     % detect diamater difference = 0
+% isterminal(2) = 1;   % stop the integration
+% direction(2) = 0;   % either direction
 
-end
+
 
