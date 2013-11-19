@@ -7,11 +7,9 @@ global Vstar dash
 if V <= Vstar
     dm_dt_res = - mflow ( d, T) - dV_dt(T,V);
     
-elseif d<= dash
+else
     dm_dt_res = - mflow ( d, T);
     
-else
-    dm_dt_res=0;
 end
 
 

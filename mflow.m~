@@ -67,13 +67,19 @@ D = (T/393).^1.5 * 1.6e-5; % Mass diffusivity for CO2 in N2, corrected to T;
 % 2 * pi * d * densAir * D * log((1+YO2inf/v1)/(1+YO2/v1)));
 
 % 2nd Try
-syms YO2 
-YO2=solve(...
-v1 * d * YO2 * B1 * exp(-7980/T)==...
-1/v1*Sh*D*(YO2inf-YO2));
+% syms YO2 
+% YO2=solve(...
+% v1 * d * YO2 * B1 * exp(-7980/T)==...
+% 1/v1*Sh*D*(YO2inf-YO2));
 
-YO2 = (Sh )
+%% 3rd Try
+%YO2 = (Sh * D * YO2inf) / (Sh*D+d * v1^2*B1*exp(-1*(7980^2)/T));
 
+
+%% 4th try
+YO2=D*YO2inf*(v1^2*d/2*B1*);
+
+%% Calculate mflow
 mflow_res = v1 * pi * d^2 * densAir * YO2 * B1 * exp(-7980/T);
  
         

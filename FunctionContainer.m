@@ -8,7 +8,7 @@ T = y(3);
 V = y(4);
 
 dy(1)= dm_dt(T, V, d);
-dy(2)= dd3_dt(d,T);
+dy(2)= dd_dt(d, T, V);
 dy(3)= dT_dt(m, d, T, V);
 dy(4)= dV_dt(T,V);
 

@@ -80,4 +80,4 @@ D = (T/393).^1.5 * 1.6e-5; % Mass diffusivity for CO2 in N2, corrected to T;
 
 %mflowInitial= v1 * pi * d^2 * densAir * YO2inf * B1 * exp(-7980/T);
 
-mflowInitial=2 * pi * d * densAir * D * log((1+YO2inf/v1)/(1+YO2/v1));
+2 * pi * d * densAir * D * log((1+YO2inf/v1)/(1+YO2/v1))
