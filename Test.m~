@@ -45,7 +45,7 @@ C{6,1}='Energy';
 
 figure(2);
 
-for i=1:(size(C)-1)
+for i=1:size(C)
     
    subplot(2,3,i);
    
@@ -115,34 +115,12 @@ end
 
 
 
-% Heat Transfer
+%% Heat Transfer
 
-m, d, T, V, mflowInitial,0
+%m, d, T, V, mflowInitial,0
 
-[row, column]=size(output);
-HeatTransferConvective=zeros(row,1);
-HeatTransferReleased=zeros(row,1);
-HeatTransferRadiation=zeros(row,1);
-
-%% Convective
+[row, column]=
+HeatTransferConvective=zeros(size(output))
 h = 2 * 0.064 / d; % Convective Heat Transfer coefficient
 
-HeatTransferConvective= h .* pi .* output(:,2).^2 .* (output(:,3)-Tair);
-
-%% Energy released
-
-HeatTransferReleased = -output(:,5) .* deltah;
-
-%% Energy from radiation
-
-HeatTransferRadiation = (epsilon * boltzmann * pi) .* output(:,2).^2 .* (output(:,3).^4 - Twall^4);
-
-subplot(2,3,6);
-
-time=time*1000;
-HeatTransferPlot=plot(time,HeatTransferConvective,time,HeatTransferReleased,time,HeatTransferRadiation);
-xlabel('Time [ms]','FontSize',15 );
-title('Heat transfer','FontSize',15 );
-% Legend
-PVleg = legend(HeatTransferPlot,'Convection', 'Released','Radiation');
-set(PVleg,'Location','NorthEast')
+HeatTransferConvective= h * pi * output(:,2)^2 * (output(:,3)-Tair);

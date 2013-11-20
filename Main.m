@@ -18,9 +18,9 @@ Bv= 37e4; % Bv (1/s)
 
 epsilon = 0.8; % emissivity of coal particle
 
-boltzmann = 1.3806488e-23; % boltzmann constant [m2*kg /s^2 / K]
+%boltzmann = 1.3806488e-23; % boltzmann constant [m2*kg /s^2 / K]
 
-%boltzmann = 5.67e-8; % boltzmann constant [m2*kg /s^2 / K]
+boltzmann = 5.67e-8; % boltzmann constant [m2*kg /s^2 / K]
 
 YO2inf = 0.21 * 0.032 / (0.21 * 0.032 + 0.79 * 0.028); % Concentration of O2
 
