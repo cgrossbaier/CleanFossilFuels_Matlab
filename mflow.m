@@ -34,7 +34,7 @@ function [ mflow_res ] = mflow ( d, T)
 % % end
 % BOOK Version------------------------------
 
-global R v1 B1 Tact dens D YO2inf Sh densAir nu;
+global R v1 B1 Tact dens D YO2inf Sh densAir nu YO2;
  
 % function [ result ] = mflowFast ( v, d, T, YO2)
 % Pabs = 101325; 
@@ -81,7 +81,13 @@ D = (T/393)^1.5 * 1.6e-5; % Mass diffusivity for CO2 in N2, corrected to T;
 
 %% 5th try
 
-YO2 = (Sh*D/(d*v1^2*B1*exp(-7980/T))+1)^(-1)*YO2inf;
+%YO2 = (Sh*D/(d*v1^2*B1*exp(-7980/T))+1)^(-1)*YO2inf;
+
+
+%% 6th try
+
+YO2 = ((v1^2*d*B1*exp(-7980/T))/(Sh*D)+1)^(-1)*YO2inf;
+
 
 %% Calculate mflow
 %mflow_res = nu * pi * (d/4)^2 * densAir * YO2 * B1 * exp(-7980/T);

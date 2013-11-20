@@ -16,11 +16,20 @@ global dash mash Vstar Vzero YO2 D
 
 % 
 
+%% Set V=Vstar
 if (abs((output(4)-Vstar)/Vstar)) <= 0.06
      output(4)=Vstar;
 end
 
-value = output(1)-mash;     % detect Volatile difference = 0
+%% Stop if m=mash
+
+mNotMash=1;
+
+if (abs((output(1)-mash)/mash)) <= 0.06
+     mNotMash=0;
+end
+
+value = mNotMash;     % detect Volatile difference = 0
 isterminal = 1;   % stop the integration
 direction = 0;   % either direction
 

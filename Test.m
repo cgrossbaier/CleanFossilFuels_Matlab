@@ -1,35 +1,26 @@
 % Test
+clear all
+
+global d V T Tair Twall
+
+%% Main Parameters
+d = 1.0000e-04; % Diameter [m]
+
+V=0; % V initial [kg]
+
+T=300; % T initial [K]
+
+Tair = 1000; % T air or infinity [K]
+
+Twall = 300; % T wall or surrounding [K]
+
 Main
-
-% %
-% mflow(d, T)
-% 
-% dmflow_dt( d,T )
-% 
-% %dd3_dt( d,T )
-% 
-% dE_dt( m, T )
-% 
-% dT_dt( m, d, T, V)
-
-%FunctionContainer( m, d, T, V )
-
-
-%[T,Y]= ode45(@FunctionContainer, [0,2], [t, m, d, T, V],options)
-
-%options = odeset('RelTol',1e-4,'AbsTol',[1e-4 1e-4 1e-5]);
 
 global mflowInitial
 
-timeMax=0.45;
-
-%[time,output] = ode45(@FunctionContainer,[0 timeMax],[m, d, T, V, 0,0]);
-
-options = odeset('Events',@eventsCFF, 'NonNegative', 1:6);
-             
+timeMax=0.5;
+           
 options = odeset('Events',@eventsCFF);
-
-%options = odeset('Events',@(time,output)eventsCFF(time,output));
 
 [time,output,te,ye,ie]=ode45(...
 @FunctionContainer,...
@@ -118,11 +109,11 @@ for i=1:size(C)
     
    if (i==5)
        
-       ylim([0 mflowInitial]);
-       
    end
 
 end
 
 
+
+%% Heat Transfer
 
