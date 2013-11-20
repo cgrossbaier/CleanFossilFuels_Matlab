@@ -6,7 +6,7 @@ function [value,isterminal,direction] = eventsCFF(time,output)
 % isterminal(i) = 1, if the integration is to terminate at a zero of this event function and 0 otherwise.
 % direction(i) = 0 if all zeros are to be computed (the default), +1 if only the zeros where the event function increases, and -1 if only the zeros where the event function decreases.
 
-global dash mash Vstar
+global dash mash Vstar Vzero YO2 D
 
 %value=zeros(2,1);
 %isterminal=zeros(2,1);
@@ -14,13 +14,13 @@ global dash mash Vstar
 
 % V = Vstar
 
-Vzero=1;
 % 
-if (Vstar-output(4))/Vstar <= 0.01
-     Vzero=0;
+
+if (abs((output(4)-Vstar)/Vstar)) <= 0.06
+     output(4)=Vstar;
 end
 
-value = Vzero;     % detect Volatile difference = 0
+value = output(1)-mash;     % detect Volatile difference = 0
 isterminal = 1;   % stop the integration
 direction = 0;   % either direction
 

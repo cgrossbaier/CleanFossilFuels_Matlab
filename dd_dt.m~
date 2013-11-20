@@ -6,7 +6,7 @@ global dens Vstar
 
 %DD3 = - 6 * (mflow ( d, T) + dV_dt(T, V))/ (pi*dens); 
 
-%if V <= Vstar
+if V <= Vstar
     
 DD = (-mflow(d,T)-dV_dt(T, V))*2/(pi*dens*d^2);
 

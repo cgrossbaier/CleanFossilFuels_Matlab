@@ -4,13 +4,13 @@ function [ dm_dt_res ] = dm_dt( T, V, d )
 
 global Vstar dash
 
-if V <= Vstar
+%if V <= Vstar
     dm_dt_res = - mflow ( d, T) - dV_dt(T,V);
     
-else
-    dm_dt_res = - mflow ( d, T);
+%else
+    %dm_dt_res = - mflow ( d, T);
     
-end
+%end
 
 
 

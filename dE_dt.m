@@ -5,7 +5,7 @@ function [ dE_dt_res ] = dE_dt( m, T )
 
 % Assumption: Enthalpy h = Energy of system
 
-dE_dt_res = m * cpp(T)*T;
+dE_dt_res = m * 1380*T;
 
 
 end

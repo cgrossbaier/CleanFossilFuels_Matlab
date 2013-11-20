@@ -14,7 +14,7 @@ dT_dt_res = mflow_value * deltah;
 
 % Energy for devolatilisation
 
-% dT_dt_res = dT_dt_res - dV_dt(T, V)*deltahpyr;
+dT_dt_res = dT_dt_res - dV_dt(T, V)*deltahpyr;
 
 % Energy from Convection
 
@@ -27,7 +27,8 @@ dT_dt_res = dT_dt_res - epsilon * boltzmann * pi * d^2 * (T^4 - Twall^4);
 
 % Times 1/(cpp * m)
 
-dT_dt_res= dT_dt_res * (cpp(T)*m) ^(-1);
+dT_dt_res= dT_dt_res * (1380*m) ^(-1);
+%dT_dt_res= dT_dt_res * (cpp(T)*m) ^(-1);
 
 % Energy loss
 

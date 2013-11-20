@@ -19,14 +19,16 @@ Main
 
 %options = odeset('RelTol',1e-4,'AbsTol',[1e-4 1e-4 1e-5]);
 
+global mflowInitial
 
-
-timeMax=0.35;
+timeMax=0.45;
 
 %[time,output] = ode45(@FunctionContainer,[0 timeMax],[m, d, T, V, 0,0]);
 
-options = odeset('Events',@eventsCFF);
+options = odeset('Events',@eventsCFF, 'NonNegative', 1:6);
              
+options = odeset('Events',@eventsCFF);
+
 %options = odeset('Events',@(time,output)eventsCFF(time,output));
 
 [time,output,te,ye,ie]=ode45(...
@@ -50,7 +52,7 @@ C{6,1}='Energy';
 
 %output(:,2) = (output(:,2)).^(1/3) ;
 
-figure(1);
+figure(2);
 
 for i=1:size(C)
     
@@ -66,9 +68,11 @@ for i=1:size(C)
     
    if (i==1)
        
-       % Mass of Ash
+        %Mass of Ash
        line([0,timeMax*1000],[wAsh*m, wAsh*m]);
        text(10, wAsh*m*1.1, 'm_A');
+       
+       ylim([mash*0.8 m*1.1]);
        
    end
    
@@ -76,9 +80,11 @@ for i=1:size(C)
    
    if (i==2)
        
-       % Mass of particle - Mass of volatiles
+       %Mass of particle - Mass of volatiles
        line([0,timeMax*1000],[dash, dash],'Color', 'black');
        text(10, dash*1.1, 'd_A');
+       
+       ylim([dash*0.8 d*1.1]);
    end
    
    % Label for Temperature
@@ -101,10 +107,18 @@ for i=1:size(C)
     
    if (i==4)
        
-       ylim([0 max(output(:,i))*1.1]);
+       ylim([0 Vstar*1.1]);
        
        % Mass of Volatiles
        line([0,timeMax*1000],[Vstar, Vstar]);
+       
+   end
+   
+    % Correct for MFlow
+    
+   if (i==5)
+       
+       ylim([0 mflowInitial]);
        
    end
 

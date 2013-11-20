@@ -1,4 +1,4 @@
-function [value,isterminal,direction] = eventsCFF(time,output)
+function [value,isterminal,direction] = eventsCC(t,y)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,21 +6,19 @@ function [value,isterminal,direction] = eventsCFF(time,output)
 % isterminal(i) = 1, if the integration is to terminate at a zero of this event function and 0 otherwise.
 % direction(i) = 0 if all zeros are to be computed (the default), +1 if only the zeros where the event function increases, and -1 if only the zeros where the event function decreases.
 
-global dash mash Vstar Vzero
+global mc ma Vstar
 
 %value=zeros(2,1);
 %isterminal=zeros(2,1);
 %direction=zeros(2,1);
 
-% V = Vstar
 
-% 
+Vzero=1;
 
-if (abs((output(4)-Vstar)/Vstar)) <= 0.1
+if (Vstar-y(4))/Vstar <= 0.01
      Vzero=0;
 end
 
-m=output(:,1)
 value = Vzero;     % detect Volatile difference = 0
 isterminal = 1;   % stop the integration
 direction = 0;   % either direction
