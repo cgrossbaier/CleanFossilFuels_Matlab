@@ -17,9 +17,9 @@ global dash mash Vstar Vzero YO2 D
 % 
 
 %% Set V=Vstar
-if (abs((output(4)-Vstar)/Vstar)) <= 0.06
-     output(4)=Vstar;
-end
+%if (abs((output(4)-Vstar)/Vstar)) <= 0.06
+     %output(4)=Vstar;
+%end
 
 %% Stop if m=mash
 
