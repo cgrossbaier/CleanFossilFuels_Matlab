@@ -10,15 +10,15 @@ V=0; % V initial [kg]
 
 T=300; % T initial [K]
 
-Tair = 1000; % T air or infinity [K]
+Tair = 900; % T air or infinity [K]
 
-Twall = 1800; % T wall or surrounding [K]
+Twall = 900; % T wall or surrounding [K]
 
 Main
 
 global mflowInitial
 
-timeMax=0.5;
+timeMax=0.4;
            
 options = odeset('Events',@eventsCFF);
 
@@ -27,6 +27,8 @@ options = odeset('Events',@eventsCFF);
 [0 timeMax],...
 [m, d, T, V, mflowInitial,0], ...
 options);
+
+[row, column]=size(output);
 
 %% Correct for Volatiles
 
@@ -40,6 +42,17 @@ end
 %% Correct for Mflow
 
 output(:,5)=-output(:,5);
+
+%% Post_Combustion
+
+[time_AfterCombustion,output_AfterCombustion]=ode45(...
+@FunctionContainer_AfterCombustion,...
+[time(row) timeMax],...
+[output(row,3)]);
+
+time_AfterCombustion=time_AfterCombustion*1000;
+
+[row_AfterCombustion, column_AfterCombustion]=size(output_AfterCombustion);
 
 time=time*1000; % t in ms
 
@@ -64,6 +77,7 @@ for i=1:(size(C)-1)
     
    subplot(2,3,i);
    
+   hold on;
    plot(time, output(:,i))
       
     xlabel('Time [ms]','FontSize',15 );
@@ -106,6 +120,8 @@ for i=1:(size(C)-1)
        % TAir
        line([0,timeMax*1000],[Tair, Tair],'Color', 'black');
        text(10, Tair+100, 'T_A');
+       
+       plot(time_AfterCombustion,output_AfterCombustion);
    end
    
    
@@ -125,7 +141,7 @@ for i=1:(size(C)-1)
    if (i==5)
        
    end
-
+hold off
 end
 
 
@@ -134,7 +150,6 @@ end
 
 %m, d, T, V, mflowInitial,0
 
-[row, column]=size(output);
 HeatTransferConvective=zeros(row,1);
 HeatTransferReleased=zeros(row,1);
 HeatTransferRadiation=zeros(row,1);
@@ -161,7 +176,7 @@ for i=1:size(HeatTransferDevolitilisation)
 end
 
 HeatTransferDevolitilisation=HeatTransferDevolitilisation.*deltahpyr.* (1380*output(:,1)) .^(-1);
-subplot(2,3,6);
+
 
 %% Energy loss
 
@@ -171,6 +186,8 @@ end
 
 
 %% Sum Energy Transfer
+
+subplot(2,3,6);
 
 HeatTransferSum=HeatTransferConvective+HeatTransferReleased+HeatTransferRadiation+HeatTransferDevolitilisation+HeatTransferLoss;
 
@@ -185,3 +202,31 @@ title('Heat transfer','FontSize',15 );
 % Legend
 PVleg = legend(HeatTransferPlot,'Convection', 'Released','Radiation','Devolitilisation', 'Energy loss','Sum');
 set(PVleg,'Location','NorthEast')
+
+
+%% Extra Plot Heat Transfer and T
+% 
+% figure(2)
+% 
+% 
+% [AX,H1,H2] = plotyy(time,HeatTransferConvective,time,output(:,3),'plot');
+% set(get(AX(1),'Ylabel'),'String','Heat transfer') 
+% set(get(AX(2),'Ylabel'),'String','Temperature') 
+% 
+% xlabel('Time (\musec)') 
+% title('Multiple Decay Rates') 
+% set(H1,'LineStyle','--')
+% set(H2,'LineStyle',':')
+% 
+% axes(AX(1))
+% hold on
+% plot(time,HeatTransferConvective,...
+% time,HeatTransferReleased,time,HeatTransferRadiation,...
+% time,HeatTransferDevolitilisation,...
+% time, HeatTransferLoss,...
+% time,HeatTransferSum);
+% 
+% axes(AX(2))
+% hold on
+% plot(time,HeatTransferConvective);
+
