@@ -1,7 +1,7 @@
 % Test
 clear all
 
-global d V T Tair Twall Vstar
+global d V T Tair Twall Vstar dash mash
 
 %% Main Parameters
 d = 1.0000e-04; % Diameter [m]
@@ -12,7 +12,7 @@ T=300; % T initial [K]
 
 Tair = 900; % T air or infinity [K]
 
-Twall = 900; % T wall or surrounding [K]
+Twall = 1900; % T wall or surrounding [K]
 
 Main
 
@@ -71,7 +71,7 @@ C{6,1}='Energy';
 
 %output(:,2) = (output(:,2)).^(1/3) ;
 
-figure(2);
+figure(1);
 
 for i=1:(size(C)-1)
     
@@ -143,44 +143,55 @@ for i=1:(size(C)-1)
    end
 hold off
 end
-
+hold off
 
 
 % Heat Transfer
 
 %m, d, T, V, mflowInitial,0
 
-HeatTransferConvective=zeros(row,1);
-HeatTransferReleased=zeros(row,1);
-HeatTransferRadiation=zeros(row,1);
-HeatTransferDevolitilisation=zeros(row,1);
-HeatTransferLoss=zeros(row,1);
+TMerged=zeros(row+row_AfterCombustion,1);
+
+TMerged(1:row, :)=output(:,3);
+TMerged((row+1):row+row_AfterCombustion, :)=output_AfterCombustion;
+
+timeMerged=zeros(row+row_AfterCombustion,1);
+timeMerged(1:row, :)=time;
+timeMerged((row+1):row+row_AfterCombustion, :)=time_AfterCombustion;
+
+HeatTransferConvective=zeros(row+row_AfterCombustion,1);
+HeatTransferReleased=zeros(row+row_AfterCombustion,1);
+HeatTransferRadiation=zeros(row+row_AfterCombustion,1);
+HeatTransferDevolitilisation=zeros(row+row_AfterCombustion,1);
+HeatTransferLoss=zeros(row+row_AfterCombustion,1);
 
 %% Convective
 
-HeatTransferConvective= -2 * 0.064 .* pi .* output(:,2) .* (output(:,3)-Tair).* (1380*output(:,1)) .^(-1);
+HeatTransferConvective(1:row, :)= -2 * 0.064 .* pi .* output(:,2) .* (output(:,3)-Tair).* (1380*output(:,1)).^(-1);
+HeatTransferConvective((row+1):row+row_AfterCombustion, :)= -2 * 0.064 .* pi .* dash .* (output_AfterCombustion-Tair).* (1380*mash).^(-1);
 
 %% Energy released
 
-HeatTransferReleased = output(:,5) .* deltah.* (1380*output(:,1)) .^(-1);
+HeatTransferReleased(1:row, :) = output(:,5) .* deltah.* (1380*output(:,1)) .^(-1);
 
 %% Energy from radiation
 
-HeatTransferRadiation = -(epsilon * boltzmann * pi) .* output(:,2).^2 .* (output(:,3).^4 - Twall^4).* (1380*output(:,1)) .^(-1);
+HeatTransferRadiation(1:row, :) = -(epsilon * boltzmann * pi) .* output(:,2).^2 .* (output(:,3).^4 - Twall^4).* (1380*output(:,1)) .^(-1);
+HeatTransferRadiation((row+1):row+row_AfterCombustion, :)= -(epsilon * boltzmann * pi) .* dash^2 .* (output_AfterCombustion.^4 - Twall^4).* (1380*mash) .^(-1);
 
 
 %% Energy from devolitilisation
 
-for i=1:size(HeatTransferDevolitilisation)
+for i=1:row
     HeatTransferDevolitilisation(i)= -dV_dt(output(i,3), output(i,4));
 end
 
-HeatTransferDevolitilisation=HeatTransferDevolitilisation.*deltahpyr.* (1380*output(:,1)) .^(-1);
+HeatTransferDevolitilisation(1:row, :)=HeatTransferDevolitilisation(1:row, :).*deltahpyr.* (1380*output(:,1)) .^(-1);
 
 
 %% Energy loss
 
-for i=1:size(HeatTransferLoss)
+for i=1:row
     HeatTransferLoss(i)= -output(i,3) ./ output(i,1) * dm_dt(output(i,3),output(i,4),output(i,2));
 end
 
@@ -191,11 +202,12 @@ subplot(2,3,6);
 
 HeatTransferSum=HeatTransferConvective+HeatTransferReleased+HeatTransferRadiation+HeatTransferDevolitilisation+HeatTransferLoss;
 
-HeatTransferPlot=plot(time,HeatTransferConvective,...
-time,HeatTransferReleased,time,HeatTransferRadiation,...
-time,HeatTransferDevolitilisation,...
-time, HeatTransferLoss,...
-time,HeatTransferSum);
+HeatTransferPlot=plot(timeMerged,HeatTransferConvective,...
+timeMerged,HeatTransferReleased,...
+timeMerged,HeatTransferRadiation,...
+timeMerged,HeatTransferDevolitilisation,...
+timeMerged, HeatTransferLoss,...
+timeMerged,HeatTransferSum);
 
 xlabel('Time [ms]','FontSize',15 );
 title('Heat transfer','FontSize',15 );
@@ -203,13 +215,13 @@ title('Heat transfer','FontSize',15 );
 PVleg = legend(HeatTransferPlot,'Convection', 'Released','Radiation','Devolitilisation', 'Energy loss','Sum');
 set(PVleg,'Location','NorthEast')
 
-
-%% Extra Plot Heat Transfer and T
+hold off
+% Extra Plot Heat Transfer and T
 % 
 % figure(2)
 % 
 % 
-% [AX,H1,H2] = plotyy(time,HeatTransferConvective,time,output(:,3),'plot');
+% [AX,H1,H2] = plotyy(timeMerged,HeatTransferConvective,timeMerged,TMerged,'plot');
 % set(get(AX(1),'Ylabel'),'String','Heat transfer') 
 % set(get(AX(2),'Ylabel'),'String','Temperature') 
 % 
@@ -220,13 +232,65 @@ set(PVleg,'Location','NorthEast')
 % 
 % axes(AX(1))
 % hold on
-% plot(time,HeatTransferConvective,...
-% time,HeatTransferReleased,time,HeatTransferRadiation,...
-% time,HeatTransferDevolitilisation,...
-% time, HeatTransferLoss,...
-% time,HeatTransferSum);
+% HeatTransferT=plot(timeMerged,HeatTransferConvective,...
+% timeMerged,HeatTransferReleased,...
+% timeMerged,HeatTransferRadiation,...
+% timeMerged,HeatTransferDevolitilisation,...
+% timeMerged, HeatTransferLoss,...
+% timeMerged,HeatTransferSum);
+% hold off
 % 
 % axes(AX(2))
 % hold on
-% plot(time,HeatTransferConvective);
+% 
+% set(AX(2),'YLim',[-2000 max(output(:,3))])
+% plot(timeMerged,TMerged);
+% 
+% PVleg = legend(HeatTransferT,'Convection', 'Released','Radiation','Devolitilisation', 'Energy loss','Sum');
+% set(PVleg,'Location','NorthEast')
+
+
+figure(3)
+
+
+subplot(2,1,1);
+hold on
+ylim=[-2000 max(output(:,3))];
+
+plot(timeMerged,TMerged);
+xlabel('Time [ms]') 
+ylabel('Temperature [K]') 
+
+% TWall
+line([0,timeMax*1000],[Twall, Twall],'Color', 'black');
+       
+text(10, Twall+100, 'T_W');
+       
+       
+% TAir
+line([0,timeMax*1000],[Tair, Tair],'Color', 'black');
+text(10, Tair+100, 'T_A');
+       
+       
+hold off
+
+subplot(2,1,2);
+hold on
+HeatTransferT=plot(timeMerged,HeatTransferConvective,...
+timeMerged,HeatTransferReleased,...
+timeMerged,HeatTransferRadiation,...
+timeMerged,HeatTransferDevolitilisation,...
+timeMerged, HeatTransferLoss,...
+timeMerged,HeatTransferSum);
+
+xlabel('Time [ms]') 
+ylabel('Heat Transfer') 
+
+
+PVleg = legend(HeatTransferT,'Convection', 'Released','Radiation','Devolitilisation', 'Energy loss','Sum');
+set(PVleg,'Location','SouthWest')
+hold off
+
+
+
 
